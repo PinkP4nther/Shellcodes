@@ -23,7 +23,7 @@ _start:
 	xor eax,eax     ; Zero eax
 	push eax        ; Put 0 on the stack
 	push 0x65	; Put 'e' on the stack
-	mov ebx,esp     ; Move /bin//sh into ebx
+	mov ebx,esp     ; Move 'e' into ebx
 	cdq             ; Zero edx
 	xor ecx,ecx     ; Zero ecx
 	add al,0xe      ; Add 14 eax
